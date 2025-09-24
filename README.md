@@ -159,6 +159,36 @@ Una excepción que se lanza para indicar un error al interactuar con la base de 
 4. **Ejecutar consultas y operaciones:** Utiliza el objeto Connection para crear Statement u Objetos PreparedStatement y ejecutar tus consultas (SELECT, INSERT, UPDATE, DELETE). 
 5. **Cerrar la conexión:** Libera los recursos y cierra la conexión llamando al método close() del objeto Connection para evitar fugas de recursos. 
 
+# Uso de archivos properties en Java
+
+Los archivos `.properties` en Java se utilizan para almacenar información de configuración en formato clave-valor. Son muy útiles para separar la configuración del código fuente, facilitando cambios sin necesidad de recompilar la aplicación.
+
+## ¿Cómo funciona?
+- Un archivo `config.properties` típico puede contener:
+  ```properties
+  URL=jdbc:mysql://localhost:3306/practica-mvc
+  USERNAME=root
+  PASSWORD=admin
+  ```
+- En Java, se utiliza la clase `Properties` para leer estos valores:
+  ```java
+  Properties properties = new Properties();
+  properties.load(new FileInputStream("config.properties"));
+  String url = properties.getProperty("URL");
+  String user = properties.getProperty("USERNAME");
+  String password = properties.getProperty("PASSWORD");
+  ```
+- Esto permite cambiar la configuración de la base de datos (o cualquier otro parámetro) sin modificar el código fuente.
+
+## Ventajas
+- **Flexibilidad:** Cambia parámetros de conexión, rutas, o cualquier configuración sin recompilar.
+- **Seguridad:** Puedes excluir archivos de configuración sensibles del control de versiones.
+- **Mantenibilidad:** Centraliza la configuración en un solo lugar.
+
+## Ejemplo en este proyecto
+En este repositorio, la clase `ConexionDatabase` utiliza un archivo `config.properties` para obtener los datos de conexión a la base de datos. Así, puedes modificar el usuario, contraseña o URL de la base de datos fácilmente editando el archivo de propiedades.
+
 ## Recursos útiles
 - [Documentación oficial de Maven](https://maven.apache.org/guides/index.html)
 - [Guía de estructura de proyectos Maven](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html)
+- [Guía para el uso de properties](https://www.arquitecturajava.com/java-properties-files-y-como-usarlos/)

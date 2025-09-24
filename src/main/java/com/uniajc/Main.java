@@ -1,12 +1,11 @@
 package com.uniajc;
 
 import com.uniajc.controlador.ControladorEstudiante;
+import com.uniajc.db.ConexionDatabase;
 import com.uniajc.modelo.Estudiante;
 import com.uniajc.vista.VistaEstudiante;
 
 import java.sql.Connection;
-
-import com.uniajc.modelo.ConexionDatabase;
 
 public class Main {
   public static void main(String[] args) {
