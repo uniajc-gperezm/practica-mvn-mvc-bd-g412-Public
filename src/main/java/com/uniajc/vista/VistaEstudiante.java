@@ -1,11 +1,20 @@
 package com.uniajc.vista;
 
+import java.util.List;
+
+import com.uniajc.modelo.Estudiante;
+
 public class VistaEstudiante {
 
-  public void mostrarDetallesEstudiante(String nombre, int edad) {
-    System.out.println("=== Detalles del Estudiante ===");
-    System.out.println("Nombre: " + nombre);
-    System.out.println("Edad: " + edad);
-    System.out.println("===============================");
+  public void mostrarDetallesEstudiante(List<Estudiante> estudiantes) {
+    System.out.println("=== Detalles de los Estudiantes ===");
+
+    for (Estudiante estudiante : estudiantes) {
+      System.out.println("Nombre: " + estudiante.getNombre());
+      System.out.println("Edad: " + estudiante.getEdad());
+      System.out.println("---------------------------");
+    }
+
   }
+
 }

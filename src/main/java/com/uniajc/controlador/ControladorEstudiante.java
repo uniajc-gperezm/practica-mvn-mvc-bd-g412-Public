@@ -1,5 +1,7 @@
 package com.uniajc.controlador;
 
+import java.util.List;
+
 import com.uniajc.modelo.Estudiante;
 import com.uniajc.vista.VistaEstudiante;
 
@@ -28,7 +30,17 @@ public class ControladorEstudiante {
     return estudiante.getEdad();
   }
 
+  public void crearEstudiante(Estudiante estudiante) {
+    Estudiante.insertarEstudiante(estudiante);
+    System.out.println("Estudiante creado: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad());
+  }
+
+  public List<Estudiante> listaTodosLosEstudiantes() {
+    return Estudiante.obtenerTodosLosEstudiantes();
+  }
+
   public void mostrarVista() {
-    vista.mostrarDetallesEstudiante(estudiante.getNombre(), estudiante.getEdad());
+    List<Estudiante> estudiantes = listaTodosLosEstudiantes();
+    vista.mostrarDetallesEstudiante(estudiantes);
   }
 }
