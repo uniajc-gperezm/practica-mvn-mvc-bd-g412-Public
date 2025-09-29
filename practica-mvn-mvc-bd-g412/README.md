@@ -159,6 +159,114 @@ Una excepción que se lanza para indicar un error al interactuar con la base de 
 4. **Ejecutar consultas y operaciones:** Utiliza el objeto Connection para crear Statement u Objetos PreparedStatement y ejecutar tus consultas (SELECT, INSERT, UPDATE, DELETE). 
 5. **Cerrar la conexión:** Libera los recursos y cierra la conexión llamando al método close() del objeto Connection para evitar fugas de recursos. 
 
+# Uso de archivos properties en Java
+
+Los archivos `.properties` en Java se utilizan para almacenar información de configuración en formato clave-valor. Son muy útiles para separar la configuración del código fuente, facilitando cambios sin necesidad de recompilar la aplicación.
+
+## ¿Cómo funciona?
+- Un archivo `config.properties` típico puede contener:
+  ```properties
+  URL=jdbc:mysql://localhost:3306/practica-mvc
+  USERNAME=root
+  PASSWORD=admin
+  ```
+- En Java, se utiliza la clase `Properties` para leer estos valores:
+  ```java
+  Properties properties = new Properties();
+  properties.load(new FileInputStream("config.properties"));
+  String url = properties.getProperty("URL");
+  String user = properties.getProperty("USERNAME");
+  String password = properties.getProperty("PASSWORD");
+  ```
+- Esto permite cambiar la configuración de la base de datos (o cualquier otro parámetro) sin modificar el código fuente.
+
+## Ventajas
+- **Flexibilidad:** Cambia parámetros de conexión, rutas, o cualquier configuración sin recompilar.
+- **Seguridad:** Puedes excluir archivos de configuración sensibles del control de versiones.
+- **Mantenibilidad:** Centraliza la configuración en un solo lugar.
+
+## Ejemplo en este proyecto
+En este repositorio, la clase `ConexionDatabase` utiliza un archivo `config.properties` para obtener los datos de conexión a la base de datos. Así, puedes modificar el usuario, contraseña o URL de la base de datos fácilmente editando el archivo de propiedades.
+
 ## Recursos útiles
 - [Documentación oficial de Maven](https://maven.apache.org/guides/index.html)
 - [Guía de estructura de proyectos Maven](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html)
+- [Guía para el uso de properties](https://www.arquitecturajava.com/java-properties-files-y-como-usarlos/)
+
+# Gestión de estudiantes desde la base de datos
+
+Se ha implementado la funcionalidad para insertar y listar estudiantes directamente desde la base de datos utilizando JDBC. El flujo sigue el patrón MVC:
+
+## Cambios en el Modelo (`Estudiante`)
+- Se agregaron métodos estáticos para interactuar con la base de datos:
+  - `insertarEstudiante(Estudiante estudiante)`: Inserta un estudiante en la tabla `estudiante`.
+  - `obtenerTodosLosEstudiantes()`: Recupera todos los estudiantes de la base de datos y los retorna como una lista.
+
+```java
+public static void insertarEstudiante(Estudiante estudiante) {
+  // ...
+  Connection conexion = ConexionDatabase.getConnection();
+  PreparedStatement preparedStatement = conexion.prepareStatement(sql);
+  // ...
+  preparedStatement.executeUpdate();
+}
+
+public static List<Estudiante> obtenerTodosLosEstudiantes() {
+  // ...
+  Connection conexion = ConexionDatabase.getConnection();
+  Statement statement = conexion.createStatement();
+  ResultSet resultSet = statement.executeQuery(sql);
+  // ...
+}
+```
+
+## Cambios en el Controlador (`ControladorEstudiante`)
+- El controlador ahora utiliza los métodos del modelo para crear y listar estudiantes:
+  - `crearEstudiante(Estudiante estudiante)`: Llama a `insertarEstudiante` y muestra un mensaje de confirmación.
+  - `listaTodosLosEstudiantes()`: Llama a `obtenerTodosLosEstudiantes` y retorna la lista.
+  - `mostrarVista()`: Recupera la lista y la pasa a la vista.
+
+```java
+public void crearEstudiante(Estudiante estudiante) {
+  Estudiante.insertarEstudiante(estudiante);
+  System.out.println("Estudiante creado: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad());
+}
+
+public List<Estudiante> listaTodosLosEstudiantes() {
+  return Estudiante.obtenerTodosLosEstudiantes();
+}
+
+public void mostrarVista() {
+  List<Estudiante> estudiantes = listaTodosLosEstudiantes();
+  vista.mostrarDetallesEstudiante(estudiantes);
+}
+```
+
+## Cambios en la Vista (`VistaEstudiante`)
+- La vista ahora recibe una lista de estudiantes y muestra sus detalles:
+
+```java
+public void mostrarDetallesEstudiante(List<Estudiante> estudiantes) {
+  System.out.println("=== Detalles de los Estudiantes ===");
+  for (Estudiante estudiante : estudiantes) {
+    System.out.println("Nombre: " + estudiante.getNombre());
+    System.out.println("Edad: " + estudiante.getEdad());
+    System.out.println("---------------------------");
+  }
+}
+```
+
+## Ejemplo de uso en `Main`
+
+```java
+Connection conexion = ConexionDatabase.getConnection();
+Estudiante modelo = new Estudiante();
+modelo.setNombre("Juan Perez");
+modelo.setEdad(20);
+VistaEstudiante vista = new VistaEstudiante();
+ControladorEstudiante controlador = new ControladorEstudiante(modelo, vista);
+controlador.crearEstudiante(modelo);
+controlador.mostrarVista();
+```
+
+Con este flujo, los estudiantes se insertan y consultan directamente desde la base de datos, y la vista muestra la información actualizada.

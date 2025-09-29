@@ -37,10 +37,8 @@ public class ConexionDatabase {
         // error.printStackTrace();
         System.out.println("Failed to establish connection. " + error.getMessage());
       } catch (FileNotFoundException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       } catch (IOException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
