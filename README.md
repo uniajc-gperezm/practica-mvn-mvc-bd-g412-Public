@@ -270,3 +270,85 @@ controlador.mostrarVista();
 ```
 
 Con este flujo, los estudiantes se insertan y consultan directamente desde la base de datos, y la vista muestra la información actualizada.
+
+## Métodos para actualizar, eliminar y consultar estudiantes por ID
+
+Se han añadido métodos para actualizar, eliminar y consultar estudiantes por su identificador único (`id`). Esto permite una gestión completa de los registros en la base de datos.
+
+### Modelo (`Estudiante`)
+- `updateEstudiante(Estudiante estudiante)`: Actualiza los datos de un estudiante existente en la base de datos según su `id`.
+- `deleteEstudiante(Estudiante estudiante)`: Elimina un estudiante de la base de datos usando su `id`.
+- `consultarEstudiantePorId(int id)`: Busca y retorna un estudiante por su `id`.
+
+```java
+public static void updateEstudiante(Estudiante estudiante) {
+  String sql = "UPDATE estudiante SET nombre = ?, edad = ? WHERE id = ?";
+  // ...
+  preparedStatement.setString(1, estudiante.getNombre());
+  preparedStatement.setInt(2, estudiante.getEdad());
+  preparedStatement.setInt(3, estudiante.getId());
+  preparedStatement.executeUpdate();
+}
+
+public static void deleteEstudiante(Estudiante estudiante) {
+  String sql = "DELETE FROM estudiante WHERE id = ?";
+  // ...
+  preparedStatement.setInt(1, estudiante.getId());
+  preparedStatement.executeUpdate();
+}
+
+public static Estudiante consultarEstudiantePorId(int id) {
+  String sql = "SELECT id, nombre, edad FROM estudiante WHERE id = ?";
+  // ...
+  preparedStatement.setInt(1, id);
+  ResultSet resultSet = preparedStatement.executeQuery();
+  // ...
+}
+```
+
+### Controlador (`ControladorEstudiante`)
+- `actualizarEstudiante(Estudiante estudiante)`: Llama al método del modelo para actualizar un estudiante y muestra un mensaje de confirmación.
+- `eliminarEstudiante(Estudiante estudiante)`: Llama al método del modelo para eliminar un estudiante y muestra un mensaje de confirmación.
+- `consultarEstudiantePorId(int id)`: Llama al método del modelo para buscar un estudiante por su `id` y retorna el resultado.
+
+```java
+public void actualizarEstudiante(Estudiante estudiante) {
+  Estudiante.updateEstudiante(estudiante);
+  System.out.println("Estudiante actualizado: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad());
+}
+
+public void eliminarEstudiante(Estudiante estudiante) {
+  Estudiante.deleteEstudiante(estudiante);
+  System.out.println("Estudiante elimninado: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad());
+}
+
+public Estudiante consultarEstudiantePorId(int id) {
+  return Estudiante.consultarEstudiantePorId(id);
+}
+```
+
+### ¿Cómo funciona?
+- Para **actualizar** un estudiante, se debe tener el `id` del registro y los nuevos datos. El método ejecuta una sentencia SQL `UPDATE`.
+- Para **eliminar** un estudiante, se utiliza el `id` y se ejecuta una sentencia SQL `DELETE`.
+- Para **consultar** un estudiante por su `id`, se ejecuta una sentencia SQL `SELECT` con el parámetro correspondiente y se retorna el estudiante encontrado (o `null` si no existe).
+
+### Ejemplo de uso en `Main`
+
+```java
+// Actualizar el modelo
+controlador.actualizarId(42);
+controlador.actualizarNombre("Carlos Gomez");
+controlador.actualizarEdad(22);
+controlador.actualizarEstudiante(modelo);
+
+// Consultar estudiante por id
+Estudiante estudianteBuscado = controlador.consultarEstudiantePorId(42);
+if (estudianteBuscado != null) {
+  System.out.println("Encontrado: " + estudianteBuscado.getNombre());
+}
+
+// Eliminar estudiante
+controlador.eliminarEstudiante(modelo);
+```
+
+Estos métodos permiten modificar, eliminar y buscar estudiantes de forma eficiente y segura desde la base de datos, manteniendo la lógica separada en el modelo y el controlador.
