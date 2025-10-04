@@ -14,14 +14,20 @@ public class Main {
     Connection conexion = ConexionDatabase.getConnection();
     // Crear el modelo, la vista y el controlador
     Estudiante modelo = new Estudiante();
-    modelo.setNombre("Juan Perez");
-    modelo.setEdad(20);
+    modelo.setNombre("Juan Perez Pepito");
+    modelo.setEdad(21);
 
     VistaEstudiante vista = new VistaEstudiante();
 
     ControladorEstudiante controlador = new ControladorEstudiante(modelo, vista);
 
     controlador.crearEstudiante(modelo);
+
+    // Actualizar el modelo
+    controlador.actualizarId(42);
+    controlador.actualizarNombre("Carlos Gomez");
+    controlador.actualizarEdad(22);
+    controlador.actualizarEstudiante(modelo);
 
     // Actualizar la vista con los detalles del estudiante
     controlador.mostrarVista();
