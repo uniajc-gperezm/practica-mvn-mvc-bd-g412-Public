@@ -12,9 +12,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Clase para gestionar la conexión a la base de datos usando JDBC y un archivo
+ * de propiedades.
+ * Permite obtener y cerrar la conexión de forma centralizada.
+ */
 public class ConexionDatabase {
+  // Conexión única (singleton)
   private static Connection connection = null;
 
+  /**
+   * Obtiene la conexión a la base de datos. Si no existe, la crea usando
+   * config.properties.
+   * 
+   * @return Objeto Connection listo para usar.
+   */
   public static Connection getConnection() {
 
     Properties properties = new Properties();
@@ -25,16 +37,15 @@ public class ConexionDatabase {
         // Cargar las propiedades desde el archivo config.properties
         properties.load(new FileInputStream(new File("config.properties")));
 
-        // 2. Definir los parámetros de conexión
+        // Leer los parámetros de conexión
         String url = properties.get("URL").toString();
         String user = properties.get("USERNAME").toString();
         String password = properties.get("PASSWORD").toString();
 
-        // 3. Establecer la conexión
+        // Establecer la conexión
         connection = DriverManager.getConnection(url, user, password);
         System.out.println("Conexion exitosa.");
       } catch (SQLException error) {
-        // error.printStackTrace();
         System.out.println("Failed to establish connection. " + error.getMessage());
       } catch (FileNotFoundException e) {
         e.printStackTrace();
@@ -45,6 +56,9 @@ public class ConexionDatabase {
     return connection;
   }
 
+  /**
+   * Cierra la conexión a la base de datos si está abierta.
+   */
   public static void closeConnection() {
     if (connection != null) {
       try {

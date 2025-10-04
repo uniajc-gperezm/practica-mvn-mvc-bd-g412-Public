@@ -7,32 +7,36 @@ import com.uniajc.vista.VistaEstudiante;
 
 import java.sql.Connection;
 
+/**
+ * Clase principal del programa. Demuestra el uso del patrón MVC para gestionar
+ * estudiantes.
+ */
 public class Main {
   public static void main(String[] args) {
-    // System.out.println("Bienvenido Estudiante!");
-
+    // Establecer la conexión a la base de datos (usando config.properties)
     Connection conexion = ConexionDatabase.getConnection();
-    // Crear el modelo, la vista y el controlador
+
+    // Crear el modelo (estudiante), la vista y el controlador
     Estudiante modelo = new Estudiante();
-    modelo.setNombre("Juan Perez Pepito");
-    modelo.setEdad(21);
+    modelo.setNombre("Juan Perez Pepito"); // Asignar nombre
+    modelo.setEdad(21); // Asignar edad
 
     VistaEstudiante vista = new VistaEstudiante();
-
     ControladorEstudiante controlador = new ControladorEstudiante(modelo, vista);
 
+    // Insertar el estudiante en la base de datos
     controlador.crearEstudiante(modelo);
 
-    // Actualizar el modelo
-    controlador.actualizarId(42);
+    // Actualizar los datos del estudiante (ejemplo de actualización)
+    controlador.actualizarId(42); // Asignar id (debe existir en la base de datos)
     controlador.actualizarNombre("Carlos Gomez");
     controlador.actualizarEdad(22);
     controlador.actualizarEstudiante(modelo);
 
-    // Actualizar la vista con los detalles del estudiante
+    // Mostrar todos los estudiantes registrados en la base de datos
     controlador.mostrarVista();
 
+    // Cerrar la conexión si es necesario (opcional)
     // ConexionDatabase.closeConnection();
-
   }
 }
