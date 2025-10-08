@@ -1,0 +1,24 @@
+// Source code is decompiled from a .class file using FernFlower decompiler (from Intellij IDEA).
+package com.uniajc.vista;
+
+import com.uniajc.modelo.Estudiante;
+import java.util.Iterator;
+import java.util.List;
+
+public class VistaEstudiante {
+   public VistaEstudiante() {
+   }
+
+   public void mostrarDetallesEstudiante(List<Estudiante> estudiantes) {
+      System.out.println("=== Detalles de los Estudiantes ===");
+      Iterator var3 = estudiantes.iterator();
+
+      while(var3.hasNext()) {
+         Estudiante estudiante = (Estudiante)var3.next();
+         System.out.println("Nombre: " + estudiante.getNombre());
+         System.out.println("Edad: " + estudiante.getEdad());
+         System.out.println("---------------------------");
+      }
+
+   }
+}
