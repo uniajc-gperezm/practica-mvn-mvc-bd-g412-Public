@@ -3,7 +3,7 @@ package com.uniajc;
 import com.uniajc.controlador.ControladorEstudiante;
 import com.uniajc.db.ConexionDatabase;
 import com.uniajc.modelo.Estudiante;
-import com.uniajc.vista.VistaEstudiante;
+import com.uniajc.vista.consola.VistaEstudiante;
 
 import java.sql.Connection;
 
@@ -18,8 +18,8 @@ public class Main {
 
     // Crear el modelo (estudiante), la vista y el controlador
     Estudiante modelo = new Estudiante();
-    modelo.setNombre("Juan Perez Pepito"); // Asignar nombre
-    modelo.setEdad(21); // Asignar edad
+    modelo.setNombre("Samuel Idrobo"); // Asignar nombre
+    modelo.setEdad(17); // Asignar edad
 
     VistaEstudiante vista = new VistaEstudiante();
     ControladorEstudiante controlador = new ControladorEstudiante(modelo, vista);

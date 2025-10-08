@@ -2,7 +2,7 @@ package com.uniajc.controlador;
 
 import java.util.List;
 import com.uniajc.modelo.Estudiante;
-import com.uniajc.vista.VistaEstudiante;
+import com.uniajc.vista.consola.VistaEstudiante;
 
 /**
  * Controlador para gestionar la lógica entre el modelo Estudiante y la vista
