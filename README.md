@@ -352,3 +352,99 @@ controlador.eliminarEstudiante(modelo);
 ```
 
 Estos métodos permiten modificar, eliminar y buscar estudiantes de forma eficiente y segura desde la base de datos, manteniendo la lógica separada en el modelo y el controlador.
+
+## Interfaz gráfica (Swing)
+
+Se agregó una implementación básica de interfaz gráfica usando Java Swing para gestionar estudiantes. El fichero principal de la GUI es `src/main/java/com/uniajc/vista/swing/VistaEstudianteSwing.java`.
+
+Resumen de cómo se hizo la interfaz:
+
+- Se creó una clase que extiende `JFrame` (`VistaEstudianteSwing`) y, en su constructor, llama a `inicializarComponentes()` para montar la ventana.
+- Se utilizó un `BorderLayout` en el `JFrame` para dividir la ventana en zonas: norte (entradas), centro (tabla), este (búsqueda) y sur (botones de acción).
+- Componentes principales:
+  - Campos de entrada: `JTextField` para `Nombre`, `Nombre original`, `Edad`.
+  - Tabla de datos: `JTable` con `DefaultTableModel` para mostrar columnas `ID`, `Nombre`, `Edad`.
+  - Botones de acción: `JButton` para `Agregar`, `Actualizar`, `Eliminar`, `Refrescar`, `Limpiar`.
+  - Búsqueda: campos y botones para buscar por ID y por nombre (`txtBusquedaId`, `btnBuscarId`, `txtBusquedaNombre`, `btnBuscarNombre`).
+
+Qué se agregó exactamente (archivos y elementos de código):
+
+- `src/main/java/com/uniajc/vista/swing/VistaEstudianteSwing.java`:
+  - Clase `VistaEstudianteSwing` que define la ventana y todos los componentes Swing mencionados.
+  - Método `inicializarComponentes()` donde se instancian y colocan los `JLabel`, `JTextField`, `JTable`, `JScrollPane` y `JButton`.
+  - Se definieron variables miembro para los componentes reutilizables: `tablaEstudiantes`, `modeloTabla`, `txtNombre`, `txtEdad`, `txtNombreOriginal`, `txtBusquedaId`, `txtBusquedaNombre`, `btnAgregar`, `btnActualizar`, `btnEliminar`, `btnBuscarId`, `btnBuscarNombre`, `btnRefrescar`, `btnLimpiar`.
+
+- En el layout:
+  - Panel superior (`panelSuperior`) con `GridLayout` para los campos de entrada.
+  - Panel central con `JScrollPane` que contiene la `JTable`.
+  - Panel inferior (`panelInferior`) con `GridLayout` que contiene los botones principales.
+  - Panel derecho (`panelDerecho`) con campos y botones de búsqueda.
+
+Eventos y controlador:
+
+- Actualmente la clase contiene la estructura de la interfaz y las variables de los botones, pero las llamadas a un controlador están comentadas (hay un bloque comentado que muestra cómo inyectar un `ControladorEstudianteSwing` y registrar `ActionListener`s en los botones). Para integrarla con la lógica del proyecto, se espera:
+  1) Implementar un controlador que implemente `ActionListener` y pase como parámetro a un método `setControlador(...)` en la vista.
+  2) Dentro de `setControlador`, llamar a `btnAgregar.addActionListener(controlador)` y similares para los demás botones (ya hay código de ejemplo comentado en el archivo).
+
+Comportamiento esperado una vez integrado con el controlador:
+
+- `Agregar`: leer los campos de entrada y crear/inserar un nuevo `Estudiante` mediante el `ControladorEstudiante`.
+- `Actualizar`: actualizar la fila seleccionada o usar el campo `Nombre original` como referencia para modificar un registro.
+- `Eliminar`: eliminar el estudiante seleccionado en la tabla.
+- `Refrescar`: recargar los datos de la base y actualizar el `DefaultTableModel`.
+- `Limpiar`: vaciar los campos de entrada.
+- `Buscar ID` y `Buscar Nombre`: ejecutar consultas filtradas y mostrar los resultados en la tabla o en un diálogo.
+
+Notas y recomendaciones:
+
+- La implementación actual de `VistaEstudianteSwing` es solo la capa de presentación. Recomiendo implementar un `ControladorEstudianteSwing` que conecte la vista con `ControladorEstudiante` y el modelo `Estudiante`.
+- Validar entradas (por ejemplo, que `Edad` sea numérica) en el controlador antes de intentar insertar/actualizar en la base de datos.
+- Añadir confirmaciones (ej. `JOptionPane.showConfirmDialog`) antes de eliminar registros.
+- De ser necesario, internacionalizar textos o extraer las cadenas a un archivo de propiedades.
+
+Ejemplo mínimo de integración (esqueleto):
+
+```java
+// En algún lugar del arranque de la app (por ejemplo, Main.java)
+VistaEstudianteSwing vista = new VistaEstudianteSwing();
+ControladorEstudiante controlador = new ControladorEstudiante(modelo, vista); //adaptar constructor
+vista.setVisible(true);
+
+
+## Resumen de cambios recientes (explicación de lo implementado)
+
+A continuación se detalla, en lenguaje claro, qué se implementó recientemente en la interfaz gráfica y en el controlador Swing, y cómo usar la funcionalidad de actualización por ID:
+
+- Archivos nuevos/modificados:
+  - `src/main/java/com/uniajc/vista/swing/VistaEstudianteSwing.java` (modificado):
+    - Ahora expone un método `setControlador(ActionListener)` para registrar los listeners de los botones.
+    - Añadidos métodos para obtener los valores de los campos (`getNombre()`, `getEdadText()`, `getBusquedaId()`, etc.).
+    - Añadido `setTablaData(List<Estudiante>)` para poblar la tabla desde el controlador.
+    - Añadido `limpiarCampos()` para vaciar los campos de entrada.
+    - Añadido `getSelectedRowId()` para obtener el `id` del estudiante en la fila seleccionada de la `JTable`.
+    - Añadidos `showInfo(String)` y `showError(String)` para mostrar mensajes al usuario con `JOptionPane`.
+
+  - `src/main/java/com/uniajc/controlador/ControladorEstudianteSwing.java` (nuevo):
+    - Implementa `ActionListener` y actúa como puente entre la vista Swing (`VistaEstudianteSwing`) y el controlador de negocio (`ControladorEstudiante`).
+    - Maneja acciones de los botones: `Agregar`, `Actualizar` (por id seleccionado), `Eliminar` (por id), `Refrescar`, `Limpiar`, `Buscar ID`, `Buscar Nombre`.
+    - Delegación a `ControladorEstudiante` para las operaciones CRUD en la base de datos.
+
+- Comportamiento clave implementado:
+  - Agregar: lee `Nombre` y `Edad` desde la vista, crea un `Estudiante` y lo inserta en la BD.
+  - Actualizar: obtiene el `id` de la fila seleccionada en la tabla (`getSelectedRowId()`), valida la edad, carga el estudiante por id, actualiza nombre y edad y llama a `actualizarEstudiante` en el controlador de negocio.
+  - Eliminar: usa el campo `Buscar ID` o la fila seleccionada para eliminar por id.
+  - Refrescar: recarga todos los estudiantes desde la base y vuelve a poblar la tabla.
+  - Buscar Nombre: filtra la lista de estudiantes por coincidencia parcial del nombre y muestra los resultados en la tabla.
+
+- Cómo usar la actualización por ID (pasos rápidos):
+  1. Selecciona la fila del estudiante que quieres modificar en la tabla (haz clic en la fila).
+  2. Cambia los valores en los campos `Nombre` y `Edad` en el panel superior.
+  3. Presiona el botón `Actualizar`. El sistema tomará el `id` de la fila seleccionada, validará la edad y actualizará el registro en la base de datos.
+  4. Al finalizar, la tabla se refrescará automáticamente y verás un mensaje de confirmación.
+
+Notas y recomendaciones finales:
+- La vista es la capa de presentación; la lógica de negocio sigue en `ControladorEstudiante` y `Estudiante` (modelo). El controlador Swing es solo un adaptador para convertir eventos de la UI en llamadas al controlador de negocio.
+- Se recomienda agregar validaciones adicionales (por ejemplo nombre obligatorio, rangos de edad) y confirmaciones antes de eliminar (`JOptionPane.showConfirmDialog`).
+- Si prefieres que la actualización se haga mediante un campo de `ID` visible en lugar de selección de fila, puedo añadir un `txtId` en la vista y adaptar el controlador.
+
+Si quieres, aplico ahora las últimas mejoras: confirmación antes de eliminar, validaciones más estrictas o un `MainSwing` de ejemplo que abra la vista con datos de muestra.

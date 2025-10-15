@@ -2,10 +2,12 @@ package com.uniajc.vista.swing;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+//import java.awt.event.*;
 //import com.uniajc.controlador.ControladorEstudiante;
  
 import javax.swing.*;
+import java.util.List;
+import com.uniajc.modelo.Estudiante;
  
 public class VistaEstudianteSwing extends JFrame {
 
@@ -32,14 +34,75 @@ public VistaEstudianteSwing(){
     inicializarComponentes();
 }
 
-//public void setControlador(ControladorEstudianteSwing controlador){
-    //btnAgregar.addActionListener(controlador);
-    //btnActualizar.addActionListener(controlador);
-    //btnEliminar.addActionListener(controlador);
-    //btnBuscarId.addActionListener(controlador);
-    //btnBuscarNombre.addActionListener(controlador);
-    //btnRefrescar.addActionListener(controlador);
-    //btnLimpiar.addActionListener(controlador);
+/**
+ * Permite registrar un ActionListener (controlador) para los botones de la vista.
+ */
+public void setControlador(java.awt.event.ActionListener controlador){
+    btnAgregar.addActionListener(controlador);
+    btnActualizar.addActionListener(controlador);
+    btnEliminar.addActionListener(controlador);
+    btnBuscarId.addActionListener(controlador);
+    btnBuscarNombre.addActionListener(controlador);
+    btnRefrescar.addActionListener(controlador);
+    btnLimpiar.addActionListener(controlador);
+}
+
+// Getters para que el controlador pueda leer los campos
+public String getNombre(){
+    return txtNombre.getText();
+}
+
+public String getNombreOriginal(){
+    return txtNombreOriginal.getText();
+}
+
+public String getEdadText(){
+    return txtEdad.getText();
+}
+
+public String getBusquedaId(){
+    return txtBusquedaId.getText();
+}
+
+public String getBusquedaNombre(){
+    return txtBusquedaNombre.getText();
+}
+
+/** Limpia los campos de entrada */
+public void limpiarCampos(){
+    txtNombre.setText("");
+    txtNombreOriginal.setText("");
+    txtEdad.setText("");
+    txtBusquedaId.setText("");
+    txtBusquedaNombre.setText("");
+}
+
+/** Devuelve el id del estudiante en la fila seleccionada de la tabla, o -1 si no hay selección */
+public int getSelectedRowId(){
+    int row = tablaEstudiantes.getSelectedRow();
+    if(row == -1) return -1;
+    Object val = modeloTabla.getValueAt(row, 0);
+    if(val == null) return -1;
+    try{ return Integer.parseInt(val.toString()); }catch(NumberFormatException ex){ return -1; }
+}
+
+public void showInfo(String msg){
+    JOptionPane.showMessageDialog(this, msg, "Información", JOptionPane.INFORMATION_MESSAGE);
+}
+
+public void showError(String msg){
+    JOptionPane.showMessageDialog(this, msg, "Error", JOptionPane.ERROR_MESSAGE);
+}
+
+/** Rellena la tabla con la lista de estudiantes proporcionada */
+public void setTablaData(List<Estudiante> estudiantes){
+    // limpiar modelo
+    modeloTabla.setRowCount(0);
+    if(estudiantes == null) return;
+    for(Estudiante e : estudiantes){
+        modeloTabla.addRow(new Object[]{e.getId(), e.getNombre(), e.getEdad()});
+    }
+}
 
 
 private void inicializarComponentes(){
