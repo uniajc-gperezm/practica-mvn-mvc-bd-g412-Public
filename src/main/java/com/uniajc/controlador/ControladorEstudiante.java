@@ -21,6 +21,12 @@ public class ControladorEstudiante {
    * @param estudiante Modelo de estudiante a gestionar.
    * @param vista      Vista para mostrar los datos.
    */
+
+   public ControladorEstudiante() {
+    this.estudiante = null;
+    this.vista = null;
+   }
+
   public ControladorEstudiante(Estudiante estudiante, VistaEstudiante vista) {
     this.estudiante = estudiante;
     this.vista = vista;
