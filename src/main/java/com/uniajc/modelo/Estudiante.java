@@ -65,6 +65,14 @@ public class Estudiante {
     this.edad = edad;
   }
 
+  @Override
+  public String toString() {
+    if (this.nombre != null) {
+      return this.nombre + " (id=" + this.id + ")";
+    }
+    return "Estudiante[id=" + id + "]";
+  }
+
   /**
    * Inserta un nuevo estudiante en la base de datos.
    * 
@@ -80,7 +88,7 @@ public class Estudiante {
         preparedStatement.executeUpdate(); // Ejecuta la inserción
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      System.err.println("Error insertando estudiante: " + e.getMessage());
     }
   }
 
@@ -100,7 +108,7 @@ public class Estudiante {
         preparedStatement.executeUpdate(); // Ejecuta la actualización
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      System.err.println("Error actualizando estudiante: " + e.getMessage());
     }
   }
 
@@ -118,7 +126,7 @@ public class Estudiante {
         preparedStatement.executeUpdate(); // Ejecuta la eliminación
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      System.err.println("Error eliminando estudiante: " + e.getMessage());
     }
   }
 
@@ -144,7 +152,7 @@ public class Estudiante {
       }
       return estudiantes;
     } catch (Exception e) {
-      e.printStackTrace();
+      System.err.println("Error obteniendo lista de estudiantes: " + e.getMessage());
     }
     return estudiantes;
   }
@@ -173,7 +181,7 @@ public class Estudiante {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      System.err.println("Error consultando estudiante por id: " + e.getMessage());
     }
     return estudiante;
   }

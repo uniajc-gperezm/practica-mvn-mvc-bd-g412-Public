@@ -1,9 +1,9 @@
-package com.uniajc.controlador;
+package com.uniajc.Controlador;
 
 import java.util.List;
 
 import com.uniajc.modelo.Estudiante;
-import com.uniajc.vista.consola.VistaEstudiante;
+import com.uniajc.vista.IVistaEstudiante;
 
 /**
  * Controlador para gestionar la lógica entre el modelo Estudiante y la vista
@@ -11,9 +11,9 @@ import com.uniajc.vista.consola.VistaEstudiante;
  */
 public class ControladorEstudiante {
   private Estudiante estudiante;
-  private VistaEstudiante vista;
+  private IVistaEstudiante vista;
 
-  public ControladorEstudiante(Estudiante estudiante, VistaEstudiante vista) {
+  public ControladorEstudiante(Estudiante estudiante, IVistaEstudiante vista) {
     this.estudiante = estudiante;
     this.vista = vista;
   }
@@ -44,17 +44,20 @@ public class ControladorEstudiante {
 
   public void crearEstudiante(Estudiante estudiante) {
     Estudiante.insertarEstudiante(estudiante);
-    System.out.println("Estudiante creado: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad());
+    String msg = "Estudiante creado: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad();
+    if (vista != null) vista.mostrarMensaje(msg); else System.out.println(msg);
   }
 
   public void actualizarEstudiante(Estudiante estudiante) {
     Estudiante.updateEstudiante(estudiante);
-    System.out.println("Estudiante actualizado: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad());
+    String msg = "Estudiante actualizado: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad();
+    if (vista != null) vista.mostrarMensaje(msg); else System.out.println(msg);
   }
 
   public void eliminarEstudiante(Estudiante estudiante) {
     Estudiante.deleteEstudiante(estudiante);
-    System.out.println("Estudiante eliminado: " + estudiante.getNombre());
+    String msg = "Estudiante eliminado: " + estudiante.getNombre();
+    if (vista != null) vista.mostrarMensaje(msg); else System.out.println(msg);
   }
 
   public Estudiante consultarEstudiantePorId(int id) {
@@ -70,6 +73,3 @@ public class ControladorEstudiante {
     vista.mostrarDetallesEstudiante(estudiantes);
   }
 }
-// Duplicate file placeholder removed. The real `ControladorEstudiante` implementation
-// lives in `com/uniajc/controlador/ControladorEstudiante.java` (lowercase folder).
-// This file was left to avoid case-only path conflicts on Windows; keep it empty.

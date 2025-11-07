@@ -60,9 +60,9 @@ public class ConexionDatabase {
       } catch (SQLException error) {
         System.err.println("Failed to establish connection. " + error.getMessage());
       } catch (FileNotFoundException e) {
-        e.printStackTrace();
+        System.err.println("config.properties no encontrado: " + e.getMessage());
       } catch (IOException e) {
-        e.printStackTrace();
+        System.err.println("Error leyendo config.properties: " + e.getMessage());
       }
     }
     return connection;
