@@ -3,7 +3,7 @@ package com.uniajc;
 import com.uniajc.controlador.ControladorEstudiante;
 import com.uniajc.db.ConexionDatabase;
 import com.uniajc.modelo.Estudiante;
-import com.uniajc.vista.VistaEstudiante;
+import com.uniajc.vista.consola.VistaEstudiante;
 
 import java.sql.Connection;
 

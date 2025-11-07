@@ -1,4 +1,4 @@
-package com.uniajc.vista;
+package com.uniajc.vista.consola;
 
 import java.util.List;
 import com.uniajc.modelo.Estudiante;
