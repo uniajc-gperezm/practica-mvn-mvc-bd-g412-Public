@@ -16,7 +16,7 @@ public class VistaEstudiante implements IVistaEstudiante {
 
     for (Estudiante estudiante : estudiantes) {
       System.out.println("Nombre: " + estudiante.getNombre());
-      System.out.println("Edad: " + estudiante.getEdad());
+  System.out.println("Correo: " + estudiante.getCorreo());
       System.out.println("---------------------------");
     }
   }

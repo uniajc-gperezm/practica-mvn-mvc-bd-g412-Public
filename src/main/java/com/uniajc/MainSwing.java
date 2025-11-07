@@ -9,19 +9,19 @@ public class MainSwing {
     
     // Ejecutar interfaz en el Event Dispatch Thread de Swing
     SwingUtilities.invokeLater(() -> {
-      // Crear vista Swing
-      com.uniajc.vista.swing.VistaEstudianteSwing vista = new com.uniajc.vista.swing.VistaEstudianteSwing();
+      // Ventana Estudiantes
+      com.uniajc.vista.swing.VistaEstudianteSwing vistaEst = new com.uniajc.vista.swing.VistaEstudianteSwing();
+      com.uniajc.modelo.Estudiante modeloEst = new com.uniajc.modelo.Estudiante();
+      com.uniajc.Controlador.ControladorEstudiante controladorEst = new com.uniajc.Controlador.ControladorEstudiante(modeloEst, vistaEst);
+      vistaEst.setControlador(controladorEst);
+      vistaEst.setVisible(true);
 
-      // Crear modelo; evitar la referencia directa a ControladorEstudiante hasta corregir su paquete
-      com.uniajc.modelo.Estudiante modelo = new com.uniajc.modelo.Estudiante();
-      // Nota: el archivo ControladorEstudiante.java parece declarar un paquete distinto al esperado
-      // (por eso falla la compilación); corrija la declaración `package` en ese archivo o
-      // mueva el archivo al directorio src/main/java/com/uniajc/controlador/.
-      // Por ahora no asignamos controlador para permitir la compilación.
-      vista.setControlador(null);
-
-      // Mostrar ventana
-      vista.setVisible(true);
+      // Ventana Docentes
+      com.uniajc.vista.swing.VistaDocenteSwing vistaDoc = new com.uniajc.vista.swing.VistaDocenteSwing();
+      com.uniajc.modelo.Docente modeloDoc = new com.uniajc.modelo.Docente();
+      com.uniajc.Controlador.ControladorDocente controladorDoc = new com.uniajc.Controlador.ControladorDocente(modeloDoc, vistaDoc);
+      vistaDoc.setControlador(controladorDoc);
+      vistaDoc.setVisible(true);
     });
 }
 }
