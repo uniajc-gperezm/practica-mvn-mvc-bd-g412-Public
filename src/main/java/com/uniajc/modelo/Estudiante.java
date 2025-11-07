@@ -2,11 +2,12 @@ package com.uniajc.modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import com.uniajc.db.ConexionDatabase;
-import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.uniajc.db.ConexionDatabase;
 
 /**
  * Clase que representa a un estudiante y contiene métodos para interactuar con
@@ -72,11 +73,12 @@ public class Estudiante {
   public static void insertarEstudiante(Estudiante estudiante) {
     String sql = "INSERT INTO estudiante (nombre, edad) VALUES (?, ?)";
     try {
-      Connection conexion = ConexionDatabase.getConnection();
-      PreparedStatement preparedStatement = conexion.prepareStatement(sql);
-      preparedStatement.setString(1, estudiante.getNombre());
-      preparedStatement.setInt(2, estudiante.getEdad());
-      preparedStatement.executeUpdate(); // Ejecuta la inserción
+      try (Connection conexion = ConexionDatabase.getConnection();
+          PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+        preparedStatement.setString(1, estudiante.getNombre());
+        preparedStatement.setInt(2, estudiante.getEdad());
+        preparedStatement.executeUpdate(); // Ejecuta la inserción
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -90,12 +92,13 @@ public class Estudiante {
   public static void updateEstudiante(Estudiante estudiante) {
     String sql = "UPDATE estudiante SET nombre = ?, edad = ? WHERE id = ?";
     try {
-      Connection conexion = ConexionDatabase.getConnection();
-      PreparedStatement preparedStatement = conexion.prepareStatement(sql);
-      preparedStatement.setString(1, estudiante.getNombre());
-      preparedStatement.setInt(2, estudiante.getEdad());
-      preparedStatement.setInt(3, estudiante.getId());
-      preparedStatement.executeUpdate(); // Ejecuta la actualización
+      try (Connection conexion = ConexionDatabase.getConnection();
+          PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+        preparedStatement.setString(1, estudiante.getNombre());
+        preparedStatement.setInt(2, estudiante.getEdad());
+        preparedStatement.setInt(3, estudiante.getId());
+        preparedStatement.executeUpdate(); // Ejecuta la actualización
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -109,10 +112,11 @@ public class Estudiante {
   public static void deleteEstudiante(Estudiante estudiante) {
     String sql = "DELETE FROM estudiante WHERE id = ?";
     try {
-      Connection conexion = ConexionDatabase.getConnection();
-      PreparedStatement preparedStatement = conexion.prepareStatement(sql);
-      preparedStatement.setInt(1, estudiante.getId());
-      preparedStatement.executeUpdate(); // Ejecuta la eliminación
+      try (Connection conexion = ConexionDatabase.getConnection();
+          PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+        preparedStatement.setInt(1, estudiante.getId());
+        preparedStatement.executeUpdate(); // Ejecuta la eliminación
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -127,15 +131,16 @@ public class Estudiante {
     List<Estudiante> estudiantes = new ArrayList<>();
     String sql = "SELECT id, nombre, edad FROM estudiante";
     try {
-      Connection conexion = ConexionDatabase.getConnection();
-      Statement statement = conexion.createStatement();
-      ResultSet resultSet = statement.executeQuery(sql);
-      while (resultSet.next()) {
-        int id = resultSet.getInt("id");
-        String nombre = resultSet.getString("nombre");
-        int edad = resultSet.getInt("edad");
-        Estudiante estudiante = new Estudiante(id, nombre, edad);
-        estudiantes.add(estudiante);
+      try (Connection conexion = ConexionDatabase.getConnection();
+          Statement statement = conexion.createStatement();
+          ResultSet resultSet = statement.executeQuery(sql)) {
+        while (resultSet.next()) {
+          int id = resultSet.getInt("id");
+          String nombre = resultSet.getString("nombre");
+          int edad = resultSet.getInt("edad");
+          Estudiante estudiante = new Estudiante(id, nombre, edad);
+          estudiantes.add(estudiante);
+        }
       }
       return estudiantes;
     } catch (Exception e) {
@@ -154,16 +159,18 @@ public class Estudiante {
     Estudiante estudiante = null;
     String sql = "SELECT id, nombre, edad FROM estudiante WHERE id = ?";
     try {
-      Connection conexion = ConexionDatabase.getConnection();
-      PreparedStatement preparedStatement = conexion.prepareStatement(sql);
-      preparedStatement.setInt(1, id);
-      ResultSet resultSet = preparedStatement.executeQuery();
-      while (resultSet.next()) {
-        int idEstudiante = resultSet.getInt("id");
-        String nombre = resultSet.getString("nombre");
-        int edad = resultSet.getInt("edad");
-        Estudiante estudianteEncontrado = new Estudiante(idEstudiante, nombre, edad);
-        estudiante = estudianteEncontrado;
+      try (Connection conexion = ConexionDatabase.getConnection();
+          PreparedStatement preparedStatement = conexion.prepareStatement(sql)) {
+        preparedStatement.setInt(1, id);
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+          if (resultSet.next()) {
+            int idEstudiante = resultSet.getInt("id");
+            String nombre = resultSet.getString("nombre");
+            int edad = resultSet.getInt("edad");
+            Estudiante estudianteEncontrado = new Estudiante(idEstudiante, nombre, edad);
+            estudiante = estudianteEncontrado;
+          }
+        }
       }
     } catch (Exception e) {
       e.printStackTrace();

@@ -36,9 +36,9 @@ public class ConexionPostgres {
       } catch (SQLException error) {
         System.out.println("Failed to establish PostgreSQL connection. " + error.getMessage());
       } catch (FileNotFoundException e) {
-        e.printStackTrace();
+        System.err.println("Archivo config-postgres.properties no encontrado: " + e.getMessage());
       } catch (IOException e) {
-        e.printStackTrace();
+        System.err.println("Error leyendo config-postgres.properties: " + e.getMessage());
       }
     }
     return connection;
@@ -50,8 +50,8 @@ public class ConexionPostgres {
         connection.close();
         System.out.println("PostgreSQL connection closed successfully.");
       } catch (SQLException e) {
-        e.printStackTrace();
-        System.out.println("Failed to close PostgreSQL connection. " + e.getMessage());
+        System.err.println("Error cerrando conexión PostgreSQL: " + e.getMessage());
+        System.err.println(e.getMessage());
       }
     }
   }

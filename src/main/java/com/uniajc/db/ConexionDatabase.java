@@ -37,7 +37,15 @@ public class ConexionDatabase {
             properties.load(is);
           } else {
             // Si no está en classpath, intentar archivo en el working directory
-            properties.load(new FileInputStream(new File("config.properties")));
+            File f = new File("config.properties");
+            if (f.exists()) {
+              try (FileInputStream fis = new FileInputStream(f)) {
+                properties.load(fis);
+              }
+            } else {
+              System.err.println("No se encontró config.properties en classpath ni en el working directory.");
+              return null;
+            }
           }
         }
 
@@ -50,7 +58,7 @@ public class ConexionDatabase {
         connection = DriverManager.getConnection(url, user, password);
         System.out.println("Conexion exitosa.");
       } catch (SQLException error) {
-        System.out.println("Failed to establish connection. " + error.getMessage());
+        System.err.println("Failed to establish connection. " + error.getMessage());
       } catch (FileNotFoundException e) {
         e.printStackTrace();
       } catch (IOException e) {

@@ -1,12 +1,16 @@
 package com.uniajc.vista.swing;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 
 /**
- * Implementación mínima de la vista Swing para evitar errores de compilación.
+ * Implementación mínima de la vista Swing (nombre coincide con el fichero:
+ * vistaEstudianteSwing.java). Mantengo el nombre en minúscula para evitar
+ * problemas de case-only renames en Windows; si quieres que lo pase a
+ * PascalCase haré el rename seguro vía git (recomendado).
  */
 public class VistaEstudianteSwing extends JFrame {
 
@@ -25,10 +29,8 @@ public class VistaEstudianteSwing extends JFrame {
     setContentPane(panel);
   }
 
-  /**
-   * Placeholder para permitir que el controlador sea inyectado desde MainSwing.
-   */
   public void setControlador(Object controlador) {
-    // Opcional: almacenar referencia si se necesita interacción con el controlador
+    // Implementar si se necesita interacción con el controlador
   }
 }
+
