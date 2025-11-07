@@ -1,12 +1,12 @@
 package com.uniajc.db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConexionPostgres {
@@ -16,8 +16,14 @@ public class ConexionPostgres {
     Properties properties = new Properties();
     if (connection == null) {
       try {
-        // Cargar las propiedades desde el archivo config-postgres.properties
-        properties.load(new FileInputStream(new File("config-postgres.properties")));
+        // Intentar cargar desde classpath primero
+        try (java.io.InputStream is = ConexionPostgres.class.getClassLoader().getResourceAsStream("config-postgres.properties")) {
+          if (is != null) {
+            properties.load(is);
+          } else {
+            properties.load(new FileInputStream(new File("config-postgres.properties")));
+          }
+        }
 
         // Definir los parámetros de conexión
         String url = properties.getProperty("URL");

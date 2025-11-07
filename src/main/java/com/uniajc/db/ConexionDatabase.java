@@ -1,15 +1,13 @@
 package com.uniajc.db;
 
 // 1. Importar las clases necesarias de JDBC
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-// Otras importaciones necesarias para gestionar archivos de propiedades
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /**
@@ -33,14 +31,20 @@ public class ConexionDatabase {
 
     if (connection == null) {
       try {
-
-        // Cargar las propiedades desde el archivo config.properties
-        properties.load(new FileInputStream(new File("config.properties")));
+        // Primero intentar cargar desde el classpath (src/main/resources)
+        try (java.io.InputStream is = ConexionDatabase.class.getClassLoader().getResourceAsStream("config.properties")) {
+          if (is != null) {
+            properties.load(is);
+          } else {
+            // Si no está en classpath, intentar archivo en el working directory
+            properties.load(new FileInputStream(new File("config.properties")));
+          }
+        }
 
         // Leer los parámetros de conexión
-        String url = properties.get("URL").toString();
-        String user = properties.get("USERNAME").toString();
-        String password = properties.get("PASSWORD").toString();
+        String url = properties.getProperty("URL");
+        String user = properties.getProperty("USERNAME");
+        String password = properties.getProperty("PASSWORD");
 
         // Establecer la conexión
         connection = DriverManager.getConnection(url, user, password);
